@@ -8,13 +8,15 @@
 import Foundation
 import SpriteKit
 
+public class GameScene: SKScene {
 
-
-class GameScene: SKScene {
-
+    var timeSeg: Double = 0.0
+    var started: TimeInterval!
+    var aux = 0.0
     
     var jupiterLane: Lane!
-    var planetNode = SKSpriteNode()
+    var marsLane: Lane!
+    var earthLane: Lane!
 
     var pontos = SKLabelNode(text: "Score: 0")
     var score = 0 {
@@ -26,27 +28,31 @@ class GameScene: SKScene {
     public override func didMove(to view: SKView) {
         super.didMove(to: view)
         
-        jupiterLane = Lane(.jupiter)
-        jupiterLane.setScale(0)
+        self.scene?.anchorPoint = .zero
         
         nodesInitialSetup()
         repeatForeverActionsSetup()
-        
     }
     
     func nodesInitialSetup() {
-        self.addChild(jupiterLane)
+        
         self.addChild(pontos)
-        self.addChild(planetNode)
         
-        jupiterLane.position = CGPoint(x: 0, y: 0)
-        planetNode.texture = SKTexture(imageNamed: "Jupiter")
-        planetNode.size = CGSize(width: 100, height: 100)
-        planetNode.position = CGPoint(x: 0, y: 100)
-        planetNode.name = "jupiter"
+        jupiterLane = Lane(.jupiter, gamescene: self, mock: 1)
+        marsLane = Lane(.mars, gamescene: self, mock: 2)
+        earthLane = Lane(.earth, gamescene: self, mock: 3)
         
+        jupiterLane.position = CGPoint(x: -130, y: 0)
+        marsLane.position = CGPoint(x: 0, y: 0)
+        earthLane.position = CGPoint(x: 130 , y: 0)
+        
+        self.addChild(jupiterLane)
+        self.addChild(marsLane)
+        self.addChild(earthLane)
+
         pontos.horizontalAlignmentMode = .right
-        pontos.position = CGPoint(x: frame.midX + 170, y: frame.midY + 100)
+        pontos.position = CGPoint(x: frame.midX, y: frame.midY)
+        pontos.zPosition = 5
     }
     
     func repeatForeverActionsSetup() {
@@ -72,16 +78,38 @@ class GameScene: SKScene {
         
     }
     
-    var started: TimeInterval?
+    
     
     public override func update(_ currentTime: TimeInterval) {
         super.update(currentTime)
         
-//        if started == nil { started = currentTime }
-//        print(currentTime, " - past time:", currentTime - started!)
         
-//        let disInitial = planet.areaClique.frame.midY.distance(to: nota.frame.minY)
-//        let disFinal = planet.areaClique.frame.midY.distance(to: nota.frame.maxY)
+        if started == nil { started = currentTime }
+        
+        timeSeg = (currentTime - started).rounded()
+        
+        if aux != timeSeg {
+            aux = timeSeg
+            jupiterLane.setupNotas(currentTime: aux)
+            marsLane.setupNotas(currentTime: aux)
+            earthLane.setupNotas(currentTime: aux)
+            print("\(aux) ")
+        }
+        
+        
+       
+        
+        //let disInitial = jupiterLane.areaClique.frame.midY.distance(to: jupiterLane.nota.frame.minY)
+        //let disFinal = jupiterLane.areaClique.frame.midY.distance(to: nota.frame.maxY)
+        jupiterLane.flag = { flag in
+            if (flag != 0) {
+                print("apertei")
+            } else {
+                print("soltei")
+            }
+        }
+        
+//
 //        if planet.flag == 1 {
 //            if disInitial <= 40 && disFinal >= -20 {
 //                score += 1

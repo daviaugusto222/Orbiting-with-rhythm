@@ -11,6 +11,7 @@ import SpriteKit
 struct Nota {
     var initialTime: Double
     var duration: Double
+    var node: SKShapeNode?
     
     static func mock1() -> [Nota] {
         return [Nota(initialTime: 2.0, duration: 3.0), Nota(initialTime: 6.0, duration: 4.0), Nota(initialTime: 10.0, duration: 13.0)]

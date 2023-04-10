@@ -23,8 +23,9 @@ struct PlanetsView: View {
             VStack {
 //                SpriteView(scene: scene)
 //                    .frame(width: width, height: height)
-                SpriteView(scene: self.sizedScene(size: CGSize(width: geometry.size.width, height: geometry.size.height)))
+                SpriteView(scene: self.sizedScene(size: CGSize(width: geometry.size.width, height: geometry.size.height)))//, debugOptions: .showsPhysics)
                     .frame(width: geometry.size.width, height: geometry.size.height)
+                    
             }
         }
         .edgesIgnoringSafeArea(.all)
